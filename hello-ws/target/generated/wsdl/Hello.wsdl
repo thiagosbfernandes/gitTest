@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Hello" targetNamespace="http://experian.com.br/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://experian.com.br/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://experian.com.br/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://experian.com.br/">
+<xs:element name="sayHello" type="tns:sayHello"/>
+<xs:element name="sayHelloResponse" type="tns:sayHelloResponse"/>
+<xs:complexType name="sayHello">
+<xs:sequence>
+<xs:element minOccurs="0" name="parameter" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="sayHelloResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="HelloFault" type="tns:HelloFault"/>
+<xs:complexType name="HelloFault">
+<xs:sequence/>
+</xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="sayHello">
+    <wsdl:part name="parameters" element="ns1:sayHello">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="HelloFault">
+    <wsdl:part name="HelloFault" element="ns1:HelloFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHelloResponse">
+    <wsdl:part name="parameters" element="ns1:sayHelloResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="Hello">
+    <wsdl:operation name="sayHello">
+      <wsdl:input name="sayHello" message="ns1:sayHello">
+    </wsdl:input>
+      <wsdl:output name="sayHelloResponse" message="ns1:sayHelloResponse">
+    </wsdl:output>
+      <wsdl:fault name="HelloFault" message="ns1:HelloFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

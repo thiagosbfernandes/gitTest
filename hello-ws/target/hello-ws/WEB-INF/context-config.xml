@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:cxf="http://cxf.apache.org/core" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jaxws="http://cxf.apache.org/jaxws" 
+	xmlns:soap="http://cxf.apache.org/bindings/soap"
+	xmlns:util="http://www.springframework.org/schema/util" 
+	xmlns:policy="http://cxf.apache.org/policy" 
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://cxf.apache.org/core 
+						http://cxf.apache.org/schemas/core.xsd 
+						http://cxf.apache.org/jaxws 
+						http://cxf.apache.org/schemas/jaxws.xsd 
+						http://cxf.apache.org/bindings/soap 
+						http://cxf.apache.org/schemas/configuration/soap.xsd
+						http://www.springframework.org/schema/util 
+						http://www.springframework.org/schema/util/spring-util.xsd 
+						http://cxf.apache.org/policy 
+						http://cxf.apache.org/schemas/policy.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-policy.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-ws-security.xml" />
+	
+	<context:component-scan base-package="br.com.experian" />
+	
+	<bean id="helloImpl" class="br.com.experian.impl.HelloImpl" />
+	<bean id="callbackImpl" class="br.com.experian.sec.HelloCallBack" />
+	
+	<jaxws:endpoint id="Hello" implementor="#helloImpl"  address="/HelloService" wsdlLocation="WEB-INF/HelloImpl.wsdl">
+		<jaxws:properties>
+			<entry key="ws-security.callback-handler" value-ref="callbackImpl" />
+		</jaxws:properties>
+		
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+		</jaxws:inInterceptors>
+		
+		<jaxws:outInterceptors>
+			<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+		</jaxws:outInterceptors>
+	</jaxws:endpoint>
+	
+	
+	
+</beans>

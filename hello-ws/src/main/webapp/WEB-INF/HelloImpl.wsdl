@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="HelloService" targetNamespace="http://impl.experian.com.br/" 
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+xmlns:tns="http://impl.experian.com.br/" xmlns:ns1="http://experian.com.br/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:import namespace="http://experian.com.br/" location="Hello.wsdl">
+    </wsdl:import>
+  <wsdl:binding name="HelloServiceSoapBinding" type="ns1:Hello">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="sayHello">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="sayHello">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sayHelloResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="HelloFault">
+        <soap:fault name="HelloFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HelloService">
+    <wsdl:port name="HelloPort" binding="tns:HelloServiceSoapBinding">
+      	<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#Hello_policy" />
+      <soap:address location="http://localhost:9090/HelloPort"/>
+    </wsdl:port>
+  </wsdl:service>
+<wsp:Policy wsu:Id="Hello_policy"
+        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+        xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+        xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+    <wsp:ExactlyOne>
+			<wsp:All>
+				<sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+					<wsp:Policy>
+						<sp:TransportToken>
+							<wsp:Policy>
+								<sp:HttpsToken RequireClientCertificate="false"/>
+							</wsp:Policy>
+						</sp:TransportToken>
+						<sp:AlgorithmSuite>
+							<wsp:Policy>
+								<sp:Basic256/>
+							</wsp:Policy>
+						</sp:AlgorithmSuite>
+						<sp:Layout>
+							<wsp:Policy>
+								<sp:Strict/>
+							</wsp:Policy>
+						</sp:Layout>
+						<sp:IncludeTimestamp/>
+					</wsp:Policy>
+				</sp:TransportBinding>
+				<sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+					<wsp:Policy>
+						<sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+							<wsp:Policy>
+								<sp:WssUsernameToken10/>
+							</wsp:Policy>
+						</sp:UsernameToken>
+					</wsp:Policy>
+				</sp:SignedSupportingTokens>
+				<sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+					<wsp:Policy>
+						<sp:MustSupportRefKeyIdentifier/>
+						<sp:MustSupportRefIssuerSerial/>
+						<sp:MustSupportRefThumbprint/>
+						<sp:MustSupportRefEncryptedKey/>
+					</wsp:Policy>
+				</sp:Wss11>
+				<sp:Trust10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+					<wsp:Policy>
+						<sp:MustSupportIssuedTokens/>
+						<sp:RequireClientEntropy/>
+						<sp:RequireServerEntropy/>
+					</wsp:Policy>
+				</sp:Trust10>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy>
+  
+  
+  
+<!--   <wsp:Policy wsu:Id="Hello_policy" >
+		<wsp:ExactlyOne>
+			<wsp:All>
+				<sp:SignedSupportingTokens xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+					<wsp:Policy>
+						<sp:UsernameToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+							<wsp:Policy>
+								<sp:WssUsernameToken10/>
+							</wsp:Policy>
+						</sp:UsernameToken>
+					</wsp:Policy>
+				</sp:SignedSupportingTokens>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy> -->
+</wsdl:definitions>
